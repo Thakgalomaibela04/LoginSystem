@@ -3,20 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.loginsystem;
+import java.util.Random;
+
 
 /**
  *
  * @author Student
  */
-import java.util.Random;
-
-
-public class Message {
+public final class Message {
 
     private String messageID;
-    private int messageNumber;
-    private String recipient;
-    private String message;
+    private final int messageNumber;
+    private final String recipient;
+    private final String message;
     private String messageHash;
 
     // Static tracker for total number of created messages
@@ -69,6 +68,20 @@ public class Message {
 
         messageHash = messageNumber + ":" + firstTwo + ":" + lastWord.toUpperCase();
     }
+     public String getMessageID() {
+        return messageID;
+    }
+
+    public String getMessageHash() {
+        return messageHash;
+    }
+    public String getRecipient() {
+        return recipient;
+    }
+     public String getMessageText() {
+        return message;
+     }
+    
 
     public String storeMessage() {
         return "{\n" +
@@ -79,11 +92,19 @@ public class Message {
                "}";
     }
 
-    public void printMessage() {
+    public void printMessage(String loggedInUsername) {
         System.out.println("\n===== MESSAGE DETAILS =====");
         System.out.println("Message ID: " + messageID);
         System.out.println("Message Hash: " + messageHash);
         System.out.println("Recipient: " + recipient);
         System.out.println("Message: " + message);
     }
-}
+
+    public String getMessage() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    
+    }
+
+    
