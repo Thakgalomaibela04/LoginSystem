@@ -5,10 +5,9 @@
 package com.mycompany.loginsystem;
 import java.util.Random;
 
-
 /**
  *
- * @author Student
+ * @author Thakgalo Maibela
  */
 public final class Message {
 
@@ -37,7 +36,7 @@ public final class Message {
     private void generateMessageID() {
         Random random = new Random();
         long number = 1000000000L + (long)(random.nextDouble() * 9000000000L);
-        messageID = String.valueOf(number);
+        messageID = String.valueOf(number).substring(0, 10);
     }
 
     public boolean checkMessageID() {
@@ -46,50 +45,67 @@ public final class Message {
 
     // Checks recipient cell formatting based on international rules
     public String checkRecipientCell() {
-        if (recipient.startsWith("+") && recipient.length() <= 12) {
+        if (recipient != null && recipient.startsWith("+27") && recipient.length() >= 12 && recipient.length() <= 13) {
             return "Cell phone number successfully captured.";
         } else {
             return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
         }
     }
 
+    // Creates Message Hash in format: first2ofID:messageNumber:firstWord:lastWord (ALL CAPS)
     public void createMessageHash() {
-        String firstTwo;
-        if (message.length() >= 2) {
-            firstTwo = message.substring(0, 2).toUpperCase();
-        } else {
-            firstTwo = message.toUpperCase();
-        }
-
-        // Extracts the last word without external array dependencies
-        String clean = message.trim();
-        int lastSpace = clean.lastIndexOf(" ");
-        String lastWord = (lastSpace == -1) ? clean : clean.substring(lastSpace + 1);
-
-        messageHash = messageNumber + ":" + firstTwo + ":" + lastWord.toUpperCase();
+        String firstTwo = messageID.substring(0, 2);
+        
+        String trimmedMessage = message.trim();
+        String[] words = trimmedMessage.split("\\s+");
+        String firstWord = words.length > 0 ? words[0] : "";
+        String lastWord = words.length > 1 ? words[words.length - 1] : firstWord;
+        
+        String hash = firstTwo + ":" + messageNumber + ":" + firstWord + ":" + lastWord;
+        messageHash = hash.toUpperCase();
     }
-     public String getMessageID() {
+    
+    public String getMessageID() {
         return messageID;
     }
 
     public String getMessageHash() {
         return messageHash;
     }
+    
     public String getRecipient() {
         return recipient;
     }
-     public String getMessageText() {
-        return message;
-     }
     
+    public String getMessageText() {
+        return message;
+    }
+    
+    // FIXED: Returns the actual message, not an exception
+    public String getMessage() {
+        return message;
+    }
+    
+    public int getMessageNumber() {
+        return messageNumber;
+    }
 
+    // Returns JSON representation of the message for file storage
     public String storeMessage() {
         return "{\n" +
                "  \"messageId\": \"" + messageID + "\",\n" +
+               "  \"messageNumber\": " + messageNumber + ",\n" +
                "  \"phone\": \"" + recipient + "\",\n" +
-               "  \"text\": \"" + message + "\",\n" +
+               "  \"text\": \"" + escapeJson(message) + "\",\n" +
                "  \"hash\": \"" + messageHash + "\"\n" +
                "}";
+    }
+    
+    private String escapeJson(String text) {
+        return text.replace("\\", "\\\\")
+                   .replace("\"", "\\\"")
+                   .replace("\n", "\\n")
+                   .replace("\r", "\\r");
     }
 
     public void printMessage(String loggedInUsername) {
@@ -99,12 +115,12 @@ public final class Message {
         System.out.println("Recipient: " + recipient);
         System.out.println("Message: " + message);
     }
-
-    public String getMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     
+    public void displayFullDetails() {
+        System.out.println("Message ID: " + messageID);
+        System.out.println("Message Number: " + messageNumber);
+        System.out.println("Message Hash: " + messageHash);
+        System.out.println("Recipient: " + recipient);
+        System.out.println("Message Text: " + message);
     }
-
-    
+}
