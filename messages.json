@@ -1,11 +1,7 @@
-[{  "messageId": "2184052459",  "phone": "+27665057990",  "text": "hi how are you?",  "hash": "1:HI:YOU?"},{  "messageId": "9104317486",  "phone": "+27665057990",  "text": "hi",  "hash": "1:HI:HI"},{  "messageId": "1037429085",  "phone": "+27665057990",  "text": "how are you",  "hash": "2:HO:YOU"},{  "messageId": "8486074199",  "phone": "+2766505790",  "text": "hey you!",  "hash": "3:HE:YOU!"},{
-  "messageId": "6847234264",
+[{
+  "messageId": "3099886132",
+  "messageNumber": 1,
   "phone": "+27665057990",
   "text": "hi",
-  "hash": "1:HI:HI"
-},{
-  "messageId": "7310333136",
-  "phone": "+27794013456",
-  "text": "hey you",
-  "hash": "2:HE:YOU"
+  "hash": "30:1:HI:HI"
 }]

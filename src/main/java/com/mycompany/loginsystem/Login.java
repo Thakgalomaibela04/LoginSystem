@@ -1,79 +1,99 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Login System
  */
 package com.mycompany.loginsystem;
 
 /**
  *
- * @author Student
+ * @author Thakgalo Maibela
  */
 public class Login {
 
     // Internal fields to store credentials upon successful registration
     private static String registeredUsername = "";
     private static String registeredPassword = "";
+    private static String registeredFirstName = "";
+    private static String registeredLastName = "";
+    private static String registeredPhone = "";
 
+    // Getter methods
     public static String getRegisteredUsername() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return registeredUsername;
     }
 
-    public Login() {
+    public static String getRegisteredFirstName() {
+        return registeredFirstName;
     }
 
-    // Ensures the username contains an underscore and is exactly 5 characters long
+    public static String getRegisteredLastName() {
+        return registeredLastName;
+    }
+
+    // Username validation: must contain '_' and be <= 5 characters
     public static boolean checkUserName(String username) {
-        return username != null && username.contains("_") && username.length() == 5;
+        return username != null && username.contains("_") && username.length() <= 5;
     }
 
-    // Uses Regular Expressions (Regex) to validate length and multi-character requirements
+    // Password validation: >=8 chars, 1 uppercase, 1 digit, 1 special char
     public static boolean checkPasswordComplexity(String password) {
         if (password == null) return false;
-        
+
         String capital = ".*[A-Z].*";
-        String small = ".*[a-z].*";
-        String special = ".*[!@#$%^&*(),.?\":{}|<>].*";
         String digit = ".*\\d.*";
-        
-        return password.length() >= 8 
-               && password.matches(capital)
-               && password.matches(small) 
-               && password.matches(digit)
-               && password.matches(special);
+        String special = ".*[!@#$%^&*(),.?\":{}|<>].*";
+
+        return password.length() >= 8
+                && password.matches(capital)
+                && password.matches(digit)
+                && password.matches(special);
     }
 
-    // Validates SA phone format conditions (+27 prefix, length, and 4th digit rules)
+    // South African phone number validation
     public static boolean checkCellPhoneNumber(String phone) {
         if (phone == null || phone.length() < 4) return false;
-        
-        String saCode = "+27";
-        String firstThreeChars = phone.substring(0, 3);
-        int fourthDigit = Character.getNumericValue(phone.charAt(3));
-        
-        return phone.length() <= 12 
-               && firstThreeChars.equals(saCode)
-               && fourthDigit >= 6 
-               && fourthDigit <= 8;
+        return phone.startsWith("+27") && phone.length() >= 12 && phone.length() <= 13;
     }
 
-    // Registers user and securely stores their credentials if all conditions pass
-    public static String registerUser(String username, String password, String phone) {
-        if (checkCellPhoneNumber(phone) && checkUserName(username) && checkPasswordComplexity(password)) {
+    // Main registration method
+    public static String registerUser(String username, String password, String phone, String firstName, String lastName) {
+        if (checkUserName(username) && checkPasswordComplexity(password) && checkCellPhoneNumber(phone)) {
             registeredUsername = username;
             registeredPassword = password;
+            registeredPhone = phone;
+            registeredFirstName = firstName;
+            registeredLastName = lastName;
             return "User is successfully registered";
         } else {
-            return "User registration failed!!!!!";
+            String errorMsg = "User registration failed!!!!!\n";
+            if (!checkUserName(username)) {
+                errorMsg += "- Username must contain '_' and be no more than 5 characters.\n";
+            }
+            if (!checkPasswordComplexity(password)) {
+                errorMsg += "- Password must be at least 8 characters, contain a capital letter, a number, and a special character.\n";
+            }
+            if (!checkCellPhoneNumber(phone)) {
+                errorMsg += "- Cell phone number must start with +27 and be valid.\n";
+            }
+            return errorMsg;
         }
     }
 
-    // Verifies if login inputs match the saved credentials from registration
+    // Login status method (used by tests)
     public static String returnLoginStatus(String username, String password) {
-        if (username != null && username.equals(registeredUsername) 
-            && password != null && password.equals(registeredPassword)) {
+        if (username != null && username.equals(registeredUsername)
+                && password != null && password.equals(registeredPassword)) {
             return "A successful login";
         } else {
             return "A failed login";
         }
+    }
+
+    // Alternative login method (returns boolean)
+    public boolean loginUser(String username, String password) {
+        if (username != null && username.equals(registeredUsername)
+                && password != null && password.equals(registeredPassword)) {
+            return true;
+        }
+        return false;
     }
 }
